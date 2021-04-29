@@ -20,6 +20,7 @@ export class User extends Model<CreateUserDto> {
 
   @Column({
     type: DataType.STRING,
+    unique: true,
     allowNull: false,
   })
   email: string;
