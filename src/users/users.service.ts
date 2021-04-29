@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { USER_REPOSITORY } from 'src/core/constants/constants';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -14,24 +15,68 @@ export class UsersService {
   }
 
   async findAll(): Promise<User[]> {
-    return await this.userRepository.findAll();
+    return await this.userRepository.findAll({
+      attributes: { exclude: ['password'] },
+    });
   }
 
-  async findOne(uuid: string): Promise<User> {
-    return await this.userRepository.findOne({ where: { uuid } });
+  async findOne(uuid: string): Promise<any> {
+    const findOneUser = await this.userRepository.findOne({
+      where: { uuid },
+      attributes: { exclude: ['password'] },
+    });
+    if (findOneUser) {
+      return findOneUser;
+    }
+    return {
+      status: 404,
+      message: 'User Not Found!',
+    };
   }
 
-  // async update(
-  //   uuid: string,
-  //   updateUserDto: UpdateUserDto,
-  // ): Promise<UpdateUserDto> {
-  //   return await this.userRepository.update(
-  //     { updateUserDto },
-  //     { where: { uuid } },
-  //   );
-  // }
+  async findOneByEmail(email: string): Promise<User> {
+    return await this.userRepository.findOne<User>({ where: { email } });
+  }
+
+  async findOneById(uuid: string): Promise<User> {
+    return await this.userRepository.findOne<User>({
+      where: { uuid },
+      attributes: { exclude: ['password', 'email'] },
+    });
+  }
+
+  async update(uuid: string, updateUserDto: UpdateUserDto) {
+    try {
+      await this.userRepository.update(
+        { ...updateUserDto },
+        { where: { uuid }, returning: true },
+      );
+      const findUser = await this.userRepository.findOne({ where: { uuid } });
+      return findUser;
+    } catch (error) {
+      return {
+        status: 400,
+        error: error.message,
+      };
+    }
+  }
 
   async remove(uuid: string) {
-    return await this.userRepository.destroy<User>({ where: { uuid } });
+    try {
+      const findUser = await this.userRepository.findOne({ where: { uuid } });
+      if (!findUser) {
+        return {
+          status: 404,
+          message: 'User not found!',
+        };
+      }
+      await this.userRepository.destroy<User>({ where: { uuid } });
+      return 'User Deleted Success!';
+    } catch (error) {
+      return {
+        status: 400,
+        message: error.message,
+      };
+    }
   }
 }
