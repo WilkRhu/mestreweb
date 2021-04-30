@@ -1,6 +1,6 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
-import { Role } from 'src/core/enum/role.enum';
-import { Status } from 'src/core/enum/status.enum';
+import { Role } from '../../core/enum/role.enum';
+import { Status } from '../../core/enum/status.enum';
 import { CreateUserDto } from '../dto/create-user.dto';
 
 @Table

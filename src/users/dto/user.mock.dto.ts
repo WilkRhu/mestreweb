@@ -2,9 +2,7 @@ import { IsEmail, IsEnum, IsString, Length } from 'class-validator';
 import { Role } from '../../core/enum/role.enum';
 import { Status } from '../../core/enum/status.enum';
 
-export class CreateUserDto {
-  readonly uuid;
-
+export class UserMockDto {
   @IsString()
   @Length(1, 100)
   readonly name: string;
