@@ -28,9 +28,7 @@ export class RolesGuard implements CanActivate {
     if (!user) {
       return true;
     }
-    const getUserDatabase = await this.userService.findOneById(
-      user.uuid || user.sub,
-    );
+    const getUserDatabase = await this.userService.findOneById(user.uuid);
     if (!getUserDatabase) {
       throw new UnauthorizedException(
         'You are not authorized to perform the operation',
