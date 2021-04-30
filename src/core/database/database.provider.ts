@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
-import { User } from '../../users/entities/user.entity';
+import { Movie } from 'src/movies/entities/movie.entity';
+import { User } from 'src/users/entities/user.entity';
 import {
   DEVELOPMENT,
   PRODUCTION,
@@ -27,7 +28,7 @@ export const databaseProviders = [
           config = databaseConfig.development;
       }
       const sequelize = new Sequelize(config);
-      sequelize.addModels([User]);
+      sequelize.addModels([User, Movie]);
       await sequelize.sync();
       return sequelize;
     },
