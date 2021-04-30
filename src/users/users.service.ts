@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { USER_REPOSITORY } from 'src/core/constants/constants';
+import { USER_REPOSITORY } from '../core/constants/constants';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -47,12 +47,18 @@ export class UsersService {
 
   async update(uuid: string, updateUserDto: UpdateUserDto) {
     try {
-      await this.userRepository.update(
-        { ...updateUserDto },
-        { where: { uuid }, returning: true },
-      );
       const findUser = await this.userRepository.findOne({ where: { uuid } });
-      return findUser;
+      if (findUser) {
+        await this.userRepository.update(
+          { ...updateUserDto },
+          { where: { uuid }, returning: true },
+        );
+        return findUser;
+      }
+      return {
+        status: 404,
+        message: 'User Not Found!',
+      };
     } catch (error) {
       return {
         status: 400,
