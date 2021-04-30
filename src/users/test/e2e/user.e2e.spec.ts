@@ -1,14 +1,20 @@
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import { Sequelize } from 'sequelize-typescript';
 import * as request from 'supertest';
 import { AppModule } from '../../../app.module';
 import { AuthModule } from '../../../auth/auth.module';
+import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../../auth/guards/role-auth.guard';
+import { JwtStrategy } from '../../../auth/jwt.strategy';
 import { DatabaseModule } from '../../../core/database/database.module';
 import { ConfigService } from '../../../core/shared/config/config.service';
 import { User } from '../../../users/entities/user.entity';
+import { userProviders } from '../../../users/user.providers';
 import { UsersModule } from '../../../users/users.module';
+import { UsersService } from '../../../users/users.service';
 import {
   usercreate,
   usercreate2,
@@ -23,6 +29,7 @@ describe('UsersService', () => {
   let userMaster;
 
   beforeEach(async () => {
+    jest.setTimeout(5000);
     const moduleRef = await Test.createTestingModule({
       imports: [
         AppModule,
@@ -35,6 +42,10 @@ describe('UsersService', () => {
         }),
       ],
       providers: [
+        UsersService,
+        ...userProviders,
+        JwtAuthGuard,
+        JwtStrategy,
         ConfigService,
         {
           provide: 'SEQUELIZE',
@@ -44,6 +55,10 @@ describe('UsersService', () => {
             return sequelize;
           },
           inject: [ConfigService],
+        },
+        {
+          provide: APP_GUARD,
+          useClass: RolesGuard,
         },
       ],
     }).compile();
@@ -64,7 +79,7 @@ describe('UsersService', () => {
         .get('/api/users')
         .set('Authorization', `Bearer ${userMaster.body.token}`);
       expect(user.status).toBe(200);
-    });
+    }, 5000);
 
     it('should error unauthorized return findAll', async () => {
       const user = await request(app.getHttpServer()).get('/api/users');
