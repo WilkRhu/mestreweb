@@ -18,6 +18,23 @@ export class MoviesService {
     return await this.moviesRepository.findAll();
   }
 
+  async paginate(page, limit): Promise<Movie[]> {
+    const offsets = parseInt(limit) * (parseInt(page) - 1);
+    const limits = parseInt(limit);
+
+    const paginationMovie = await this.moviesRepository.findAll({
+      limit: limits,
+      offset: offsets,
+    });
+
+    return Object({
+      ...paginationMovie,
+      page: parseInt(page),
+      limit: limits,
+      offset: offsets,
+    });
+  }
+
   async findOne(id: number): Promise<Movie> {
     return await this.moviesRepository.findOne({
       where: { id },

@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Request,
 } from '@nestjs/common';
 import { UpdateMovieDto } from './dto/update-movie.dto';
@@ -23,6 +24,11 @@ export class MoviesController {
   @Get()
   findAll() {
     return this.moviesService.findAll();
+  }
+
+  @Get('/pagination')
+  pagination(@Query('page') page: string, @Query('limit') limit: string) {
+    return this.moviesService.paginate(page, limit);
   }
 
   @Get(':id')
