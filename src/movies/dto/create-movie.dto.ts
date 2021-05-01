@@ -1,4 +1,4 @@
-import { IsDate, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CreateMovieDto {
   readonly id: number;
@@ -9,9 +9,12 @@ export class CreateMovieDto {
   @IsString()
   readonly description: string;
 
-  @IsDate()
+  @IsString()
   readonly dateInitial: string;
 
-  @IsDate()
+  @IsString()
   readonly finalDate: string;
+
+  @IsString()
+  readonly status: string;
 }

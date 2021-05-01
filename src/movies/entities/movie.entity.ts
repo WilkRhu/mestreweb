@@ -1,4 +1,5 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Status } from '../../core/enum/status.enum';
 import { CreateMovieDto } from '../dto/create-movie.dto';
 
 @Table
@@ -30,4 +31,11 @@ export class Movie extends Model<CreateMovieDto> {
     type: DataType.STRING,
   })
   finalDate: string;
+
+  @Column({
+    type: DataType.ENUM,
+    values: [Status.ACT, Status.DES],
+    defaultValue: [Status.ACT],
+  })
+  status: string;
 }

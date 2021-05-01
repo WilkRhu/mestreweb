@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { MOVIES_REPOSITORY } from 'src/core/constants/constants';
+import { MOVIES_REPOSITORY } from '../core/constants/constants';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { Movie } from './entities/movie.entity';
@@ -25,6 +25,7 @@ export class MoviesService {
     const paginationMovie = await this.moviesRepository.findAll({
       limit: limits,
       offset: offsets,
+      where: { status: 'activated' },
     });
 
     return Object({
@@ -37,7 +38,7 @@ export class MoviesService {
 
   async findOne(id: number): Promise<Movie> {
     return await this.moviesRepository.findOne({
-      where: { id },
+      where: { id, status: 'activated' },
     });
   }
 
@@ -57,6 +58,16 @@ export class MoviesService {
       status: 404,
       message: 'Movie Not Found!',
     };
+  }
+
+  async desactivatedMovies(status: string, id: number) {
+    const statusMovie = await this.moviesRepository.update(
+      { status },
+      { where: { id }, returning: true },
+    );
+    if (statusMovie) {
+      return await this.moviesRepository.findOne({ where: { id } });
+    }
   }
 
   async remove(id: number) {
