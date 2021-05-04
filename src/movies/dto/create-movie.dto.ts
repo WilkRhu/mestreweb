@@ -17,4 +17,7 @@ export class CreateMovieDto {
 
   @IsString()
   readonly status: string;
+
+  @IsString()
+  readonly uri: string;
 }
