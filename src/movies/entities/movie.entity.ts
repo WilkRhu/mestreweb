@@ -38,4 +38,9 @@ export class Movie extends Model<CreateMovieDto> {
     defaultValue: [Status.ACT],
   })
   status: string;
+
+  @Column({
+    type: DataType.STRING,
+  })
+  uri: string;
 }

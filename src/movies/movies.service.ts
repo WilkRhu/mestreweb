@@ -10,8 +10,8 @@ export class MoviesService {
     @Inject(MOVIES_REPOSITORY) private readonly moviesRepository: typeof Movie,
   ) {}
 
-  async create(createMovieDto: CreateMovieDto) {
-    return await this.moviesRepository.create(createMovieDto);
+  async create(createMovieDto: CreateMovieDto, uri: string) {
+    return await this.moviesRepository.create({ ...createMovieDto, uri });
   }
 
   async findAll(): Promise<Movie[]> {
