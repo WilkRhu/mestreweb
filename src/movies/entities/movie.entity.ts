@@ -25,11 +25,6 @@ export class Movie extends Model<CreateMovieDto> {
   @Column({
     type: DataType.STRING,
   })
-  dateInitial: string;
-
-  @Column({
-    type: DataType.STRING,
-  })
   finalDate: string;
 
   @Column({
