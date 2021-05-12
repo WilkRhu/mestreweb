@@ -10,8 +10,5 @@ export class MovieDto {
   readonly description: string;
 
   @IsDate()
-  readonly dateInitial: string;
-
-  @IsDate()
   readonly finalDate: string;
 }

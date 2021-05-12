@@ -10,9 +10,6 @@ export class CreateMovieDto {
   readonly description: string;
 
   @IsString()
-  readonly dateInitial: string;
-
-  @IsString()
   readonly finalDate: string;
 
   @IsString()
