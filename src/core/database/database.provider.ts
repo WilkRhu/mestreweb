@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
-import { Movie } from 'src/movies/entities/movie.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Movie } from '../../movies/entities/movie.entity';
+import { User } from '../../users/entities/user.entity';
 import {
   DEVELOPMENT,
   PRODUCTION,
