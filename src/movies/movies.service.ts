@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { MOVIES_REPOSITORY } from '../core/constants/constants';
 import {
   currentMoviesArray,
   currentMoviesPerData,
-} from 'src/services/movies/currentMovies';
-import { MOVIES_REPOSITORY } from '../core/constants/constants';
+} from '../services/movies/currentMovies';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { Movie } from './entities/movie.entity';
